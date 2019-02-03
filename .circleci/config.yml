@@ -16,7 +16,11 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+          
+   test:
       - run: npm test
+      
+   ship:
       - setup_remote_docker
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run:
@@ -27,6 +31,8 @@ jobs:
                docker build -t sonicnan/example-nodejs-circle:${CIRCLE_SHA1} .
                docker push sonicnan/example-nodejs-circle:latest
                docker push sonicnan/example-nodejs-circle:${CIRCLE_SHA1}
+               
+    deploy:
       - run:
           name: "Call to Rancher to deploy"
           command: |
@@ -39,3 +45,21 @@ jobs:
                   --batch_size 3 --start_first \
                   --auto_complete --timeout 600
       - run: echo Done
+workflows:
+    version: 2
+    build_test_ship_deploy:
+        jobs:
+            - build
+            - test:
+                requires:
+                    - build
+            - ship:
+                requires:
+                    - build
+                    - test
+            - deploy:
+                type: approval
+                requires:
+                    - build
+                    - test
+                    - ship
