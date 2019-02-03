@@ -31,7 +31,7 @@ jobs:
           name: "Call to rancher to deploy"
           command: |
               docker run --rm -it \
-                  -e CATTLE_ACCES_KEY="$CATTLE_ACCESS_KEY" \
+                  -e CATTLE_ACCESS_KEY="$CATTLE_ACCESS_KEY" \
                   -e CATTLE_SECRET_KEY="$CATTLE_SECRET_KEY" \
                   -e CATTLE_URL="$CATTLE_URL" \
                   etlweather/gaucho upgrade $RANCHER_EXAMPLE_NODEJS \
