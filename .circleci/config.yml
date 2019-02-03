@@ -32,7 +32,7 @@ jobs:
                docker push sonicnan/example-nodejs-circle:latest
                docker push sonicnan/example-nodejs-circle:${CIRCLE_SHA1}
                
-   deploy:
+  deploy:
       - run:
           name: "Call to Rancher to deploy"
           command: |
